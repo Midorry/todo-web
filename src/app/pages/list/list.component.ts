@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { forkJoin, map } from 'rxjs';
 import { Todo } from 'src/app/model/todo.model';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ToDoService } from 'src/app/services/todo.service';
 
 interface ColumnItem {
   title: string;
+  width: string;
   compare?: ((a: Todo, b: Todo) => number) | false;
   priority?: number | boolean | null;
   listOfFilter?: { text: string; value: string }[] | false;
@@ -47,16 +49,19 @@ export class ListComponent implements OnInit {
   listOfColumn: ColumnItem[] = [
     {
       title: 'Id',
+      width: '50px',
       compare: (a: Todo, b: Todo) => a.id! - b.id!,
       priority: 3,
     },
     {
       title: 'Tiêu đề',
+      width: '150px',
       compare: (a: Todo, b: Todo) => a.title.localeCompare(b.title),
       priority: 2,
     },
     {
       title: 'Tiến độ',
+      width: '150px',
       listOfFilter: [
         { text: 'Chưa hoàn thành', value: 'false' },
         { text: 'Hoàn thành', value: 'true' },
@@ -66,16 +71,19 @@ export class ListComponent implements OnInit {
     },
     {
       title: 'Độ ưu tiên',
+      width: '120px',
       compare: (a: Todo, b: Todo) => a.priority.localeCompare(b.priority),
       priority: 1,
     },
     {
       title: 'Thời hạn',
+      width: '140px',
       compare: (a: Todo, b: Todo) => a.deadline.localeCompare(b.deadline),
       priority: 4,
     },
     {
       title: 'Loại công việc',
+      width: '170px',
       listOfFilter: [
         { text: 'Công việc', value: 'Công việc' },
         { text: 'Học tập', value: 'Học tập' },
@@ -87,9 +95,11 @@ export class ListComponent implements OnInit {
     },
     {
       title: 'Thời hạn',
+      width: '100px',
     },
     {
       title: 'Hành động',
+      width: '100px',
     },
   ];
 
@@ -134,7 +144,10 @@ export class ListComponent implements OnInit {
   idOfTodo = '';
   dataDetail!: Todo;
 
-  constructor(private toDoService: ToDoService) {
+  constructor(
+    private toDoService: ToDoService,
+    private notification: NotificationService
+  ) {
     this.toDoService.todos$
       .pipe(
         map((todos) =>
@@ -152,30 +165,8 @@ export class ListComponent implements OnInit {
       .subscribe((todos) => {
         this.listOfData = todos;
         this.listOfDisplayData = todos;
-        this.events = this.listOfData.map((todo) => ({
-          start: new Date(todo.deadline),
-          title: todo.title,
-          color: todo.completed ? this.colors.green : this.colors.red,
-        }));
       });
   }
-  colors: any = {
-    red: {
-      primary: '#ad2121',
-      secondary: '#FAE3E3',
-    },
-    green: {
-      primary: '#0f9d58',
-      secondary: '#C6F6D5',
-    },
-    blue: {
-      primary: '#1e90ff',
-      secondary: '#D1E8FF',
-    },
-  };
-
-  viewDate = new Date(); // ngày đang hiển thị
-  events: any;
 
   //Notification Deadline
   checkDeadlineStatus(deadline: string): 'overdue' | 'upcoming' | 'normal' {
@@ -317,8 +308,11 @@ export class ListComponent implements OnInit {
   onDelete(id: any): void {
     this.openConfirm('Bạn có chắc chắn muốn xóa không?', () => {
       this.toDoService.deleteTodo(id).subscribe({
-        next: () => console.log('Xóa thành công'),
-        error: (err) => console.error('Xóa thất bại:', err),
+        next: () => this.notification.show('Xóa thành công', 'success'),
+        error: (err) => {
+          console.error('Xóa thất bại:', err);
+          this.notification.show('Xóa thất bại', 'error');
+        },
       });
     });
   }
@@ -333,10 +327,11 @@ export class ListComponent implements OnInit {
 
         forkJoin(deleteRequests).subscribe({
           next: () => {
-            console.log('Xóa nhiều thành công');
+            this.notification.show('Xóa thành công', 'success');
             this.setOfCheckedId.clear();
           },
           error: (err) => {
+            this.notification.show('Xóa thất bại', 'error');
             console.error('Xóa nhiều thất bại: ', err);
           },
         });

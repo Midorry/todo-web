@@ -1,0 +1,22 @@
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.btn-group .btn {
+  cursor: pointer;
+}
+.calender-title {
+  line-height: normal;
+}
+.custom-calendar {
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+}

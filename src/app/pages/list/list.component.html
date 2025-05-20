@@ -47,6 +47,8 @@
     nzShowSizeChanger
     [nzData]="listOfDisplayData"
     (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+    [nzPageSize]="50"
+    [nzScroll]="{ y: '340px', x: '750px' }"
   >
     <thead>
       <!-- <tr>
@@ -70,6 +72,7 @@
           [(nzChecked)]="checked"
           [nzIndeterminate]="indeterminate"
           (nzCheckedChange)="onAllChecked($event)"
+          [nzWidth]="'50px'"
         ></th>
 
         <ng-container *ngFor="let column of listOfColumn">
@@ -82,6 +85,7 @@
               [nzFilterFn]="column.filterFn"
               [nzSortFn]="column.compare"
               [nzSortPriority]="column.priority ?? false"
+              [nzWidth]="column.width"
             >
               {{ column.title }}
             </th>
@@ -94,6 +98,7 @@
             <th
               [nzFilters]="column.listOfFilter"
               [nzFilterFn]="column.filterFn"
+              [nzWidth]="column.width"
             >
               {{ column.title }}
             </th>
@@ -106,6 +111,7 @@
             <th
               [nzSortFn]="column.compare"
               [nzSortPriority]="column.priority ?? false"
+              [nzWidth]="column.width"
             >
               {{ column.title }}
             </th>
@@ -188,6 +194,4 @@
   >
   </app-edit>
   <app-add [visible]="showAdd" (cancel)="onCancelAdd()"> </app-add>
-  <mwl-calendar-month-view [viewDate]="viewDate" [events]="events">
-  </mwl-calendar-month-view>
 </ng-container>

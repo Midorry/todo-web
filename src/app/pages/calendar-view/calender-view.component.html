@@ -1,0 +1,38 @@
+<div class="wrapper">
+  <div class="btn-group">
+    <div
+      class="btn btn-primary"
+      mwlCalendarPreviousView
+      [view]="view"
+      [(viewDate)]="viewDate"
+      (viewDateChange)="closeOpenMonthViewDay()"
+    >
+      Trước
+    </div>
+    <div
+      class="btn btn-outline-secondary"
+      mwlCalendarToday
+      [(viewDate)]="viewDate"
+    >
+      Hiện tại
+    </div>
+    <div
+      class="btn btn-primary"
+      mwlCalendarNextView
+      [view]="view"
+      [(viewDate)]="viewDate"
+      (viewDateChange)="closeOpenMonthViewDay()"
+    >
+      Sau
+    </div>
+  </div>
+  <div class="calender-title">
+    <h3>{{ viewDate | calendarDate : view + "ViewTitle" : "en" }}</h3>
+  </div>
+</div>
+<mwl-calendar-month-view
+  class="custom-calendar"
+  [viewDate]="viewDate"
+  [events]="events"
+>
+</mwl-calendar-month-view>

@@ -1,11 +1,15 @@
-.button-add{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.button-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.input-name{
-    width: 100%;
+.input-name {
+  width: 100%;
 }
-.input-date{
-    width: 100%;
+.input-name.ng-invalid.ng-touched {
+  border: 1px solid #ff4d4f !important;
+  box-shadow: none;
+}
+.input-date {
+  width: 100%;
 }

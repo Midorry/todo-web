@@ -8,18 +8,34 @@
     <form nz-form [formGroup]="addForm" (ngSubmit)="onSubmit()">
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="task">Tên công việc</nz-form-label>
-        <nz-form-control [nzSpan]="14">
+        <nz-form-control
+          [nzValidateStatus]="addForm.controls['task']"
+          [nzErrorTip]="taskErrorTemplate"
+          [nzSpan]="14"
+        >
           <input
             class="input-name"
             formControlName="task"
             nz-input
             placeholder="Công việc"
           />
+          <ng-template #taskErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">
+              Tên công việc là bắt buộc
+            </div>
+            <div *ngIf="control.hasError('minlength')">
+              Tên công việc quá ngắn
+            </div>
+          </ng-template>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="priority">Độ ưu tiên</nz-form-label>
-        <nz-form-control [nzSpan]="14">
+        <nz-form-control
+          [nzValidateStatus]="addForm.get('priority')!"
+          [nzErrorTip]="priorityErrorTemplate"
+          [nzSpan]="14"
+        >
           <nz-select
             nzShowSearch
             nzAllowClear
@@ -28,31 +44,47 @@
           >
             <nz-option nzLabel="Thấp" nzValue="low"></nz-option>
             <nz-option nzLabel="Trung bình" nzValue="medium"></nz-option>
-            <nz-option nzLabel="Cao" nzValue="heigh"></nz-option>
+            <nz-option nzLabel="Cao" nzValue="high"></nz-option>
           </nz-select>
+          <ng-template #priorityErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">
+              Độ ưu tiên là bắt buộc
+            </div>
+          </ng-template>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="deadline">Thời hạn</nz-form-label>
-        <nz-form-control [nzSpan]="14">
+        <nz-form-control
+          [nzValidateStatus]="addForm.get('deadline')!"
+          [nzErrorTip]="deadlineErrorTemplate"
+          [nzSpan]="14"
+        >
           <nz-date-picker
             class="input-date"
             nzPlaceHolder="Thời hạn"
             formControlName="deadline"
           ></nz-date-picker>
+          <ng-template #deadlineErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">Thời hạn là bắt buộc</div>
+          </ng-template>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="deadline"
           >Loại công việc</nz-form-label
         >
-        <nz-form-control [nzSpan]="14">
+        <nz-form-control
+          [nzValidateStatus]="addForm.get('tags')!"
+          [nzErrorTip]="tagsErrorTemplate"
+          [nzSpan]="14"
+        >
           <nz-select
             formControlName="tags"
             [nzMode]="'multiple'"
             [nzShowSearch]="true"
             [nzAllowClear]="true"
-            [nzPlaceHolder]="'Type to search...'"
+            [nzPlaceHolder]="'Tìm kiếm...'"
             (nzOnSearch)="onSearch($event)"
             style="width: 100%"
           >
@@ -62,12 +94,17 @@
               [nzValue]="option"
             ></nz-option>
           </nz-select>
+          <ng-template #tagsErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">
+              Loại công việc là bắt buộc
+            </div>
+          </ng-template>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
         <nz-form-control class="button-add">
-          <button nz-button nzType="primary">Thêm</button>
+          <button nz-button nzType="primary" htmlType="submit">Thêm</button>
         </nz-form-control>
       </nz-form-item>
     </form>

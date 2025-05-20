@@ -13,6 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Todo } from 'src/app/model/todo.model';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ToDoService } from 'src/app/services/todo.service';
 
 @Component({
@@ -31,13 +32,17 @@ export class EditComponent implements OnInit {
     completed: FormControl<boolean | null>;
     tags: FormControl<Array<string> | null>;
   }>;
-  constructor(private fb: FormBuilder, private todoService: ToDoService) {}
+  constructor(
+    private fb: FormBuilder,
+    private todoService: ToDoService,
+    private notification: NotificationService
+  ) {}
 
   ngOnInit(): void {
     this.editForm = this.fb.group({
       task: this.fb.control<string | null>('', [
         Validators.required,
-        Validators.minLength(1),
+        Validators.minLength(3),
       ]),
       priority: this.fb.control<string | null>('', [Validators.required]),
       deadline: this.fb.control<Date | null>(null, [Validators.required]),
@@ -74,6 +79,16 @@ export class EditComponent implements OnInit {
     );
   }
   onSubmit(): void {
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+
+      // ⚠️ Rất quan trọng: Bắt buộc cập nhật trạng thái validators cho các control
+      Object.values(this.editForm.controls).forEach((control) => {
+        control.updateValueAndValidity();
+      });
+
+      return;
+    }
     const updateTodo: Todo = {
       title: this.editForm.value.task || '',
       deadline: this.editForm.value.deadline
@@ -87,10 +102,13 @@ export class EditComponent implements OnInit {
       next: () => {
         this.cancel.emit();
         this.visible = false;
+        this.notification.show('Sửa thành công', 'success');
         this.editForm.reset();
       },
       error: (err) => {
         console.log('Sửa thất bại: ', err);
+
+        this.notification.show('Sửa thất bại', 'error');
       },
     });
   }

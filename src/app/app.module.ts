@@ -19,6 +19,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NzIconModule, NZ_ICONS } from 'ng-zorro-antd/icon';
 import { IconDefinition } from '@ant-design/icons-angular';
 import * as AllIcons from '@ant-design/icons-angular/icons';
@@ -30,6 +31,7 @@ import { EditComponent } from './pages/edit/edit.component';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { CalenderViewComponent } from './pages/calendar-view/calender-view.component';
 
 registerLocaleData(en);
 const icons: IconDefinition[] = Object.values(AllIcons);
@@ -41,6 +43,7 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     AddComponent,
     ConfirmModalComponent,
     EditComponent,
+    CalenderViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,6 +57,7 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     NzTagModule,
     NzButtonModule,
     NzIconModule,
+    NzNotificationModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
