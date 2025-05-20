@@ -1,0 +1,193 @@
+<ng-container *ngIf="todos$ | async as todos">
+  <button nz-button nzType="primary" (click)="onAdd()">Thêm</button>
+  <button
+    *ngIf="setOfCheckedId.size"
+    (click)="onDeleteMultiple()"
+    nz-button
+    nzType="primary"
+    nzDanger="true"
+  >
+    Xóa nhiều
+  </button>
+  <!-- Thanh tìm kiếm với dropdown chọn trường -->
+  <div class="search-bar">
+    <!-- Input tìm kiếm -->
+    <input
+      [(ngModel)]="searchValue"
+      placeholder="Tìm kiếm..."
+      class="search-input"
+    />
+
+    <!-- Nút mở dropdown -->
+    <div class="dropdown">
+      <button (click)="toggleDropdown()" class="dropdown-button">
+        <span nz-icon nzType="filter" nzTheme="fill"></span>
+      </button>
+
+      <!-- Dropdown chứa checkbox -->
+      <div *ngIf="dropdownOpen" class="dropdown-content">
+        <label *ngFor="let field of availableFields" class="dropdown-item">
+          <input
+            type="checkbox"
+            [value]="field.value"
+            [checked]="fieldsToSearch.includes(field.value)"
+            (change)="onFieldChange($event, field.value)"
+          />
+          <span class="dropdown-label">{{ field.label }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Nút tìm kiếm -->
+    <button (click)="search()" class="search-button">Tìm kiếm</button>
+  </div>
+
+  <nz-table
+    #rowSelectionTable
+    nzShowSizeChanger
+    [nzData]="listOfDisplayData"
+    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+  >
+    <thead>
+      <!-- <tr>
+        <th
+          [nzSelections]="listOfSelection"
+          [(nzChecked)]="checked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="onAllChecked($event)"
+        ></th>
+        <th>Id</th>
+        <th>Nội dung</th>
+        <th>Tiến độ</th>
+        <th>Độ ưu tiên</th>
+        <th>Thời hạn</th>
+        <th>Loại công việc</th>
+        <th>Hành động</th>
+      </tr> -->
+      <tr>
+        <th
+          [nzSelections]="listOfSelection"
+          [(nzChecked)]="checked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="onAllChecked($event)"
+        ></th>
+
+        <ng-container *ngFor="let column of listOfColumn">
+          <!-- Có filter và sort -->
+          <ng-container
+            *ngIf="column.listOfFilter && column.filterFn && column.compare"
+          >
+            <th
+              [nzFilters]="column.listOfFilter"
+              [nzFilterFn]="column.filterFn"
+              [nzSortFn]="column.compare"
+              [nzSortPriority]="column.priority ?? false"
+            >
+              {{ column.title }}
+            </th>
+          </ng-container>
+
+          <!-- Chỉ filter -->
+          <ng-container
+            *ngIf="column.listOfFilter && column.filterFn && !column.compare"
+          >
+            <th
+              [nzFilters]="column.listOfFilter"
+              [nzFilterFn]="column.filterFn"
+            >
+              {{ column.title }}
+            </th>
+          </ng-container>
+
+          <!-- Chỉ sort -->
+          <ng-container
+            *ngIf="!column.listOfFilter && !column.filterFn && column.compare"
+          >
+            <th
+              [nzSortFn]="column.compare"
+              [nzSortPriority]="column.priority ?? false"
+            >
+              {{ column.title }}
+            </th>
+          </ng-container>
+
+          <!-- Không filter, không sort -->
+          <ng-container
+            *ngIf="!column.listOfFilter && !column.filterFn && !column.compare"
+          >
+            <th>
+              {{ column.title }}
+            </th>
+          </ng-container>
+        </ng-container>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data">
+        <td
+          [nzChecked]="setOfCheckedId.has(data.id || 0)"
+          (nzCheckedChange)="onItemChecked(data.id || 0, $event)"
+        ></td>
+
+        <td>{{ data.id }}</td>
+        <td>{{ data.title }}</td>
+        <td>
+          <ng-container *ngIf="data.completed">
+            <nz-tag [nzColor]="'green'">Hoàn thành</nz-tag>
+          </ng-container>
+          <ng-container *ngIf="!data.completed">
+            <nz-tag [nzColor]="'red'">Chưa hoàn thành</nz-tag>
+          </ng-container>
+        </td>
+
+        <td>{{ data.priority }}</td>
+        <td>
+          {{ data.deadline + "" | date : "dd/MM/yyyy" : "+0700" }}
+        </td>
+        <td>
+          <nz-tag *ngFor="let tag of data.tags" [nzColor]="'#108ee9'">{{
+            tag
+          }}</nz-tag>
+        </td>
+        <td>
+          <ng-container [ngSwitch]="checkDeadlineStatus(data.deadline)">
+            <nz-tag *ngSwitchCase="'overdue'" nzColor="red">Quá hạn</nz-tag>
+            <nz-tag *ngSwitchCase="'upcoming'" nzColor="orange"
+              >Sắp đến hạn</nz-tag
+            >
+            <nz-tag *ngSwitchCase="'normal'" nzColor="green"
+              >Còn thời gian</nz-tag
+            >
+          </ng-container>
+        </td>
+        <td>
+          <button
+            nz-button
+            nzType="primary"
+            nzDanger
+            (click)="onDelete(data.id)"
+          >
+            Xóa</button
+          ><button nz-button nzType="primary" (click)="onEdit(data.id)">
+            Sửa
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <app-confirm-modal
+    [visible]="showConfirm"
+    [message]="confirmMessage"
+    (confirm)="onConfirm()"
+    (cancel)="onCancel()"
+  ></app-confirm-modal>
+  <app-edit
+    [visible]="showEdit"
+    [dataTodo]="dataDetail"
+    (cancel)="onCancelEdit()"
+  >
+  </app-edit>
+  <app-add [visible]="showAdd" (cancel)="onCancelAdd()"> </app-add>
+  <mwl-calendar-month-view [viewDate]="viewDate" [events]="events">
+  </mwl-calendar-month-view>
+</ng-container>

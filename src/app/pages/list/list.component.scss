@@ -1,0 +1,55 @@
+[nz-button] {
+  margin-right: 8px;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+}
+.dropdown {
+  position: relative;
+}
+.dropdown-button {
+  padding: 8px 12px;
+  border-radius: 2px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+.dropdown-content {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  padding: 10px;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  min-width: 180px;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.dropdown-label {
+  margin-left: 6px;
+}
+.search-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 2px;
+  background-color: #1976d2;
+  color: white;
+  cursor: pointer;
+}

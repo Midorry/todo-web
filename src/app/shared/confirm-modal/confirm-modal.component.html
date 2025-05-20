@@ -1,0 +1,15 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  nzTitle="Cảnh báo"
+  (nzOnCancel)="onCancel()"
+  (nzOnOk)="onConfirm()"
+  [nzFooter]="footerTemplate"
+>
+  <ng-container *nzModalContent>
+    {{ message }}
+  </ng-container>
+  <ng-template #footerTemplate>
+    <button nz-button (click)="onCancel()">Đóng</button>
+    <button nz-button (click)="onConfirm()">Đồng ý</button>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,87 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  nzTitle="Sửa Công việc"
+  (nzOnCancel)="onCancel()"
+  [nzFooter]="null"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="task">Tên công việc</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input
+            class="input-name"
+            formControlName="task"
+            nz-input
+            placeholder="Công việc"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="priority">Độ ưu tiên</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-select
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Độ ưu tiên"
+            formControlName="priority"
+          >
+            <nz-option nzLabel="Thấp" nzValue="low"></nz-option>
+            <nz-option nzLabel="Trung bình" nzValue="medium"></nz-option>
+            <nz-option nzLabel="Cao" nzValue="heigh"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="deadline">Thời hạn</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-date-picker
+            class="input-date"
+            nzPlaceHolder="Thời hạn"
+            formControlName="deadline"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="completed">Trạng thái</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-radio-group formControlName="completed">
+            <label nz-radio [nzValue]="true">Hoàn thành</label>
+            <label nz-radio [nzValue]="false">Chưa hoàn thành</label>
+          </nz-radio-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="deadline"
+          >Loại công việc</nz-form-label
+        >
+        <nz-form-control [nzSpan]="14">
+          <nz-select
+            formControlName="tags"
+            [nzMode]="'multiple'"
+            [nzShowSearch]="true"
+            [nzAllowClear]="true"
+            [nzPlaceHolder]="'Type to search...'"
+            (nzOnSearch)="onSearch($event)"
+            style="width: 100%"
+          >
+            <nz-option
+              *ngFor="let option of filteredOptions"
+              [nzLabel]="option"
+              [nzValue]="option"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control class="button-edit">
+          <button nzType="primary">Sửa</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+  <!-- <ng-template #footerTemplate>
+    <button nz-button (click)="onCancel()">Đóng</button>
+  </ng-template> -->
+</nz-modal>
