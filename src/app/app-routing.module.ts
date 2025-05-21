@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ListComponent } from './pages/list/list.component';
 import { CalenderViewComponent } from './pages/calendar-view/calender-view.component';
+import { StatsComponent } from './pages/stats/stats.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'welcome' },
@@ -19,6 +20,10 @@ const routes: Routes = [
   {
     path: 'calender',
     component: CalenderViewComponent,
+  },
+  {
+    path: 'stats',
+    component: StatsComponent,
   },
 ];
 

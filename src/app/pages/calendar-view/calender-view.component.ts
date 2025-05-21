@@ -1,46 +1,40 @@
-import { Component } from '@angular/core';
-import { CalendarView } from 'angular-calendar';
+import { Component, OnInit } from '@angular/core';
 import { ToDoService } from 'src/app/services/todo.service';
+import { CalendarOptions } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 @Component({
   selector: 'app-calender-view',
   templateUrl: './calender-view.component.html',
   styleUrls: ['./calender-view.component.scss'],
 })
-export class CalenderViewComponent {
-  viewDate = new Date(); // ngày đang hiển thị
-  events: any;
-  colors: any = {
-    red: {
-      primary: '#ad2121',
-      secondary: '#FAE3E3',
+export class CalenderViewComponent implements OnInit {
+  calendarOptions: CalendarOptions = {
+    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+    initialView: 'dayGridMonth', // dạng tháng
+    events: [],
+    height: 540,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay',
     },
-    blue: {
-      primary: '#1e90ff',
-      secondary: '#D1E8FF',
-    },
-    yellow: {
-      primary: '#e3bc08',
-      secondary: '#FDF1BA',
-    },
-    green: {
-      primary: 'green',
-      secondary: '#abffab',
-    },
+    eventColor: '#3788d8', // màu mặc định nếu không đặt riêng từng event
+    eventDisplay: 'block',
   };
 
-  activeDayIsOpen: boolean = true;
-  view: CalendarView = CalendarView.Month;
-  constructor(private todoService: ToDoService) {
+  constructor(private todoService: ToDoService) {}
+
+  ngOnInit(): void {
     this.todoService.todos$.subscribe((todos) => {
-      this.events = todos.map((todo) => ({
-        start: new Date(todo.deadline),
+      const mappedEvents = todos.map((todo) => ({
         title: todo.title,
-        color: todo.completed ? this.colors.blue : this.colors.red,
+        date: todo.deadline,
+        color: todo.completed ? '#52c41a' : '#f5222d', // xanh nếu hoàn thành, đỏ nếu chưa
       }));
+      this.calendarOptions.events = mappedEvents;
     });
-  }
-  closeOpenMonthViewDay() {
-    this.activeDayIsOpen = false;
   }
 }

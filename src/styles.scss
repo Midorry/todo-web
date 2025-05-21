@@ -1,2 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
+// styles.scss
+
+// Light theme
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --primary-color: #1890ff;
+  --border-color: #d9d9d9;
+}
+
+// Dark theme
+.dark-theme {
+  --bg-color: #1f1f1f;
+  --text-color: #ffffff;
+  --primary-color: #177ddc;
+  --border-color: #434343;
+}

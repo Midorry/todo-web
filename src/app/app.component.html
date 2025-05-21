@@ -30,6 +30,9 @@
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/calender">Lịch</a>
           </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/stats">Thống kê</a>
+          </li>
         </ul>
       </li>
       <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
@@ -51,6 +54,7 @@
             [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
           ></span>
         </span>
+        <app-button-mode></app-button-mode>
       </div>
     </nz-header>
     <nz-content>

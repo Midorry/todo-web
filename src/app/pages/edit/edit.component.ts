@@ -81,8 +81,7 @@ export class EditComponent implements OnInit {
   onSubmit(): void {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
-
-      // ⚠️ Rất quan trọng: Bắt buộc cập nhật trạng thái validators cho các control
+      // cập nhật trạng thái validators cho các control
       Object.values(this.editForm.controls).forEach((control) => {
         control.updateValueAndValidity();
       });
@@ -102,13 +101,13 @@ export class EditComponent implements OnInit {
       next: () => {
         this.cancel.emit();
         this.visible = false;
-        this.notification.show('Sửa thành công', 'success');
+        this.notification.show('Cập nhật thành công', 'success');
         this.editForm.reset();
       },
       error: (err) => {
         console.log('Sửa thất bại: ', err);
 
-        this.notification.show('Sửa thất bại', 'error');
+        this.notification.show('Cập nhật thất bại', 'error');
       },
     });
   }

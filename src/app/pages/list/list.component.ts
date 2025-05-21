@@ -108,30 +108,6 @@ export class ListComponent implements OnInit {
   setOfCheckedId = new Set<number>();
   checked = false;
   indeterminate = false;
-  listOfSelection = [
-    {
-      text: 'Select All Row',
-      onSelect: () => this.onAllChecked(true),
-    },
-    {
-      text: 'Select Odd Row',
-      onSelect: () => {
-        this.listOfCurrentPageData.forEach((data, index) =>
-          this.updateCheckedSet(data.id || 0, index % 2 !== 0)
-        );
-        this.refreshCheckedStatus();
-      },
-    },
-    {
-      text: 'Select Even Row',
-      onSelect: () => {
-        this.listOfCurrentPageData.forEach((data, index) =>
-          this.updateCheckedSet(data.id || 0, index % 2 === 0)
-        );
-        this.refreshCheckedStatus();
-      },
-    },
-  ];
 
   // Confirm dialog
   showConfirm = false;
@@ -286,8 +262,14 @@ export class ListComponent implements OnInit {
     this.showEdit = true;
     if (id) {
       this.toDoService.getTodoDetail(id).subscribe({
-        next: (data) => (this.dataDetail = data),
-        error: (err) => console.error('Lỗi lấy chi tiết todo: ', err),
+        next: (data) => {
+          this.dataDetail = data;
+          // this.notification.show('Lấy dữ liệu công việc thành công', 'success');
+        },
+        error: (err) => {
+          console.error('Lỗi lấy dữ liệu công việc : ', err);
+          // this.notification.show('Lấy công việc thất bại', 'error');
+        },
       });
     }
   }

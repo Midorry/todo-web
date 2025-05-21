@@ -11,6 +11,8 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgChartsModule } from 'ng2-charts';
+import { FullCalendarModule } from '@fullcalendar/angular';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
@@ -31,7 +33,11 @@ import { EditComponent } from './pages/edit/edit.component';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 import { CalenderViewComponent } from './pages/calendar-view/calender-view.component';
+import { ButtonModeComponent } from './pages/button-mode/button-mode.component';
+import { StatsComponent } from './pages/stats/stats.component';
 
 registerLocaleData(en);
 const icons: IconDefinition[] = Object.values(AllIcons);
@@ -44,10 +50,14 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     ConfirmModalComponent,
     EditComponent,
     CalenderViewComponent,
+    ButtonModeComponent,
+    StatsComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
+    NgChartsModule,
+    FullCalendarModule,
     NzTableModule,
     NzFormModule,
     NzDatePickerModule,
@@ -58,6 +68,8 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     NzButtonModule,
     NzIconModule,
     NzNotificationModule,
+    NzSwitchModule,
+    NzGridModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,

@@ -1,0 +1,6 @@
+<nz-switch
+  [(ngModel)]="switchValue"
+  [nzCheckedChildren]="'🌙'"
+  [nzUnCheckedChildren]="'☀️'"
+  (ngModelChange)="switchMode($event)"
+></nz-switch>

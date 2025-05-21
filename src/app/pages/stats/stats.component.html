@@ -1,0 +1,36 @@
+<!-- stats.component.html -->
+<div class="container">
+  <div class="container-wrapper">
+    <div class="chart-container">
+      <h3 class="chart-title">Biểu đồ ưu tiên</h3>
+      <canvas
+        baseChart
+        [data]="priorityChartData"
+        [labels]="['Thấp', 'Trung bình', 'Cao']"
+        [type]="'bar'"
+      >
+      </canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Biểu đồ công việc từng tháng</h3>
+      <canvas
+        baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [type]="'bar'"
+      >
+      </canvas>
+    </div>
+  </div>
+  <div class="doughnut">
+    <h3 class="chart-title">Biểu đồ tỉ lệ trạng thái công việc</h3>
+    <canvas
+      baseChart
+      [data]="completedChartData"
+      [labels]="['Hoàn thành', 'Chưa hoàn thành']"
+      [type]="'doughnut'"
+    >
+    </canvas>
+  </div>
+</div>

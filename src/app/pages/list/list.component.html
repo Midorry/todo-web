@@ -16,6 +16,7 @@
       [(ngModel)]="searchValue"
       placeholder="Tìm kiếm..."
       class="search-input"
+      (keydown.enter)="search()"
     />
 
     <!-- Nút mở dropdown -->
@@ -48,27 +49,11 @@
     [nzData]="listOfDisplayData"
     (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
     [nzPageSize]="50"
-    [nzScroll]="{ y: '340px', x: '750px' }"
+    [nzScroll]="{ y: '340px', x: '1200px' }"
   >
     <thead>
-      <!-- <tr>
-        <th
-          [nzSelections]="listOfSelection"
-          [(nzChecked)]="checked"
-          [nzIndeterminate]="indeterminate"
-          (nzCheckedChange)="onAllChecked($event)"
-        ></th>
-        <th>Id</th>
-        <th>Nội dung</th>
-        <th>Tiến độ</th>
-        <th>Độ ưu tiên</th>
-        <th>Thời hạn</th>
-        <th>Loại công việc</th>
-        <th>Hành động</th>
-      </tr> -->
       <tr>
         <th
-          [nzSelections]="listOfSelection"
           [(nzChecked)]="checked"
           [nzIndeterminate]="indeterminate"
           (nzCheckedChange)="onAllChecked($event)"
