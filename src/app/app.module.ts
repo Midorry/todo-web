@@ -35,9 +35,13 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzGridModule } from 'ng-zorro-antd/grid';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { CalenderViewComponent } from './pages/calendar-view/calender-view.component';
 import { ButtonModeComponent } from './pages/button-mode/button-mode.component';
 import { StatsComponent } from './pages/stats/stats.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 registerLocaleData(en);
 const icons: IconDefinition[] = Object.values(AllIcons);
@@ -52,6 +56,8 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     CalenderViewComponent,
     ButtonModeComponent,
     StatsComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +76,8 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     NzNotificationModule,
     NzSwitchModule,
     NzGridModule,
+    NzDropDownModule,
+    NzAvatarModule,
     AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,

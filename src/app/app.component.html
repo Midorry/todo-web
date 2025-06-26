@@ -1,4 +1,4 @@
-<nz-layout class="app-layout">
+<nz-layout class="app-layout" *ngIf="showLayout; else loginLayout">
   <nz-sider
     class="menu-sidebar"
     nzCollapsible
@@ -47,14 +47,28 @@
   <nz-layout>
     <nz-header>
       <div class="app-header">
-        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
-          <span
-            class="trigger"
-            nz-icon
-            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
-          ></span>
-        </span>
-        <app-button-mode></app-button-mode>
+        <div>
+          <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+            <span
+              class="trigger"
+              nz-icon
+              [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+            ></span>
+          </span>
+          <app-button-mode></app-button-mode>
+        </div>
+        <a nz-dropdown [nzDropdownMenu]="menu" nzPlacement="topCenter">
+          <nz-avatar nzIcon="user"></nz-avatar>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu nzSelectable>
+            <li nz-menu-item>Trang cá nhân</li>
+            <li nz-menu-item nzDanger (click)="logout()">
+              <span nz-icon nzType="logout"></span>
+              Đăng xuất
+            </li>
+          </ul>
+        </nz-dropdown-menu>
       </div>
     </nz-header>
     <nz-content>
@@ -64,3 +78,18 @@
     </nz-content>
   </nz-layout>
 </nz-layout>
+<ng-template #loginLayout>
+  <!-- Layout đơn giản chỉ có login -->
+  <div
+    style="
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: aliceblue;
+    "
+  >
+    <router-outlet></router-outlet>
+  </div>
+</ng-template>

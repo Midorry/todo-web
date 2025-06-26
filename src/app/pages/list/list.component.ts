@@ -55,13 +55,13 @@ export class ListComponent implements OnInit {
     },
     {
       title: 'Tiêu đề',
-      width: '150px',
+      width: '130px',
       compare: (a: Todo, b: Todo) => a.title.localeCompare(b.title),
       priority: 2,
     },
     {
       title: 'Tiến độ',
-      width: '150px',
+      width: '130px',
       listOfFilter: [
         { text: 'Chưa hoàn thành', value: 'false' },
         { text: 'Hoàn thành', value: 'true' },
@@ -95,12 +95,12 @@ export class ListComponent implements OnInit {
     },
     {
       title: 'Thời hạn',
-      width: '100px',
+      width: '120px',
     },
-    {
-      title: 'Hành động',
-      width: '100px',
-    },
+    // {
+    //   title: 'Hành động',
+    //   width: '100px',
+    // },
   ];
 
   // Multi-select

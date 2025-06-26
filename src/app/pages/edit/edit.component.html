@@ -55,12 +55,19 @@
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="6" nzFor="deadline">Thời hạn</nz-form-label>
-        <nz-form-control [nzSpan]="14">
+        <nz-form-control
+          [nzSpan]="14"
+          [nzValidateStatus]="editForm.get('deadline')!"
+          [nzErrorTip]="deadlineErrorTemplate"
+        >
           <nz-date-picker
             class="input-date"
             nzPlaceHolder="Thời hạn"
             formControlName="deadline"
           ></nz-date-picker>
+          <ng-template #deadlineErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">Thời hạn là bắt buộc</div>
+          </ng-template>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>

@@ -106,11 +106,12 @@
           <ng-container
             *ngIf="!column.listOfFilter && !column.filterFn && !column.compare"
           >
-            <th>
+            <th [nzWidth]="column.width">
               {{ column.title }}
             </th>
           </ng-container>
         </ng-container>
+        <th nzRight [nzWidth]="'150px'">Hành động</th>
       </tr>
     </thead>
     <tbody>
@@ -121,7 +122,7 @@
         ></td>
 
         <td>{{ data.id }}</td>
-        <td>{{ data.title }}</td>
+        <td nzBreakWord>{{ data.title }}</td>
         <td>
           <ng-container *ngIf="data.completed">
             <nz-tag [nzColor]="'green'">Hoàn thành</nz-tag>
@@ -151,7 +152,7 @@
             >
           </ng-container>
         </td>
-        <td>
+        <td nzRight>
           <button
             nz-button
             nzType="primary"
@@ -178,5 +179,5 @@
     (cancel)="onCancelEdit()"
   >
   </app-edit>
-  <app-add [visible]="showAdd" (cancel)="onCancelAdd()"> </app-add>
+  <app-add [visible]="showAdd" (cancel)="onCancelAdd()"></app-add>
 </ng-container>

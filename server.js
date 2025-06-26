@@ -9,15 +9,20 @@ server.use(middlewares);
 // Parse request body thành JSON
 server.use(jsonServer.bodyParser);
 
-// Middleware tùy chỉnh trước khi lưu: ép kiểu `id` là number
+// Middleware tự động tăng ID cho các bảng như 'todos', 'users', ...
 server.use((req, res, next) => {
   if (req.method === "POST" && !req.body.id) {
-    const todos = router.db.get("todos").value();
-    const maxId = todos.reduce((max, item) => {
-      const id = parseInt(item.id);
-      return isNaN(id) ? max : Math.max(max, id);
-    }, 0);
-    req.body.id = maxId + 1;
+    const collectionName = req.path.replace(/^\/+|\/+$/g, ""); // loại bỏ dấu /
+    try {
+      const collection = router.db.get(collectionName).value();
+      const maxId = collection.reduce((max, item) => {
+        const id = parseInt(item.id);
+        return isNaN(id) ? max : Math.max(max, id);
+      }, 0);
+      req.body.id = maxId + 1;
+    } catch (e) {
+      console.warn(`⚠️ Không thể tự tăng ID cho "${collectionName}"`);
+    }
   }
   next();
 });
