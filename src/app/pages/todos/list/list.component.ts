@@ -18,7 +18,7 @@ interface ColumnItem {
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
 })
-export class ListComponent implements OnInit {
+export class ListTodoComponent implements OnInit {
   // Search
   searchValue: string = '';
   fieldsToSearch: string[] = ['id', 'title'];
@@ -47,12 +47,12 @@ export class ListComponent implements OnInit {
 
   // Columns
   listOfColumn: ColumnItem[] = [
-    {
-      title: 'Id',
-      width: '50px',
-      compare: (a: Todo, b: Todo) => a.id! - b.id!,
-      priority: 3,
-    },
+    // {
+    //   title: 'Id',
+    //   width: '50px',
+    //   compare: (a: Todo, b: Todo) => a._id!.localeCompare(b._id!),
+    //   priority: 3,
+    // },
     {
       title: 'Tiêu đề',
       width: '130px',
@@ -105,7 +105,7 @@ export class ListComponent implements OnInit {
 
   // Multi-select
   listOfCurrentPageData: readonly Todo[] = [];
-  setOfCheckedId = new Set<number>();
+  setOfCheckedId = new Set<string>();
   checked = false;
   indeterminate = false;
 
@@ -119,6 +119,10 @@ export class ListComponent implements OnInit {
   showAdd = false;
   idOfTodo = '';
   dataDetail!: Todo;
+
+  countOverdue = 0;
+  countUpcoming = 0;
+  countNormal = 0;
 
   constructor(
     private toDoService: ToDoService,
@@ -159,16 +163,54 @@ export class ListComponent implements OnInit {
     }
   }
 
+  checkDeadlineStatusNotification(deadline: string) {
+    const now = new Date().getTime();
+    const dueTime = new Date(deadline).getTime();
+    const diffHours = (dueTime - now) / (1000 * 60 * 60);
+
+    if (dueTime < now) {
+      this.countOverdue += 1;
+    } else if (diffHours <= 168) {
+      this.countUpcoming += 1;
+    } else {
+      this.countNormal += 1;
+    }
+  }
+
   ngOnInit() {
     this.checkTodosDeadline(); // check lần đầu
+
     setInterval(() => this.checkTodosDeadline(), 3600 * 1000); // mỗi giờ
   }
 
   checkTodosDeadline() {
+    this.countOverdue = 0;
+    this.countUpcoming = 0;
+    this.countNormal = 0;
+
     this.toDoService.todos$.subscribe((todos) => {
       todos.forEach((todo) => {
+        this.checkDeadlineStatusNotification(todo.deadline);
+
         this.checkDeadlineStatus(todo.deadline);
       });
+
+      // if (this.countOverdue > 0) {
+      //   this.notification.show(
+      //     `Có ${this.countOverdue} công việc đã quá hạn`,
+      //     'error'
+      //   );
+      // } else if (this.countUpcoming > 0) {
+      //   this.notification.show(
+      //     `Có ${this.countUpcoming} công việc gần đến hạn`,
+      //     'warning'
+      //   );
+      // } else if (this.countNormal > 0) {
+      //   this.notification.show(
+      //     `Có ${this.countNormal} công việc cần làm`,
+      //     'info'
+      //   );
+      // }
     });
   }
 
@@ -204,7 +246,7 @@ export class ListComponent implements OnInit {
   }
 
   // Checkbox logic
-  updateCheckedSet(id: number, checked: boolean): void {
+  updateCheckedSet(id: string, checked: boolean): void {
     if (checked) {
       this.setOfCheckedId.add(id);
     } else {
@@ -212,14 +254,14 @@ export class ListComponent implements OnInit {
     }
   }
 
-  onItemChecked(id: number, checked: boolean): void {
+  onItemChecked(id: string, checked: boolean): void {
     this.updateCheckedSet(id, checked);
     this.refreshCheckedStatus();
   }
 
   onAllChecked(value: boolean): void {
     this.listOfCurrentPageData.forEach((item) =>
-      this.updateCheckedSet(item.id || 0, value)
+      this.updateCheckedSet(item._id!, value)
     );
     this.refreshCheckedStatus();
   }
@@ -231,11 +273,11 @@ export class ListComponent implements OnInit {
 
   refreshCheckedStatus(): void {
     this.checked = this.listOfCurrentPageData.every((item) =>
-      this.setOfCheckedId.has(item.id || 0)
+      this.setOfCheckedId.has(item._id!)
     );
     this.indeterminate =
       this.listOfCurrentPageData.some((item) =>
-        this.setOfCheckedId.has(item.id || 0)
+        this.setOfCheckedId.has(item._id!)
       ) && !this.checked;
   }
 

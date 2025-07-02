@@ -117,11 +117,11 @@
     <tbody>
       <tr *ngFor="let data of rowSelectionTable.data">
         <td
-          [nzChecked]="setOfCheckedId.has(data.id || 0)"
-          (nzCheckedChange)="onItemChecked(data.id || 0, $event)"
+          [nzChecked]="setOfCheckedId.has(data._id!)"
+          (nzCheckedChange)="onItemChecked(data._id!, $event)"
         ></td>
 
-        <td>{{ data.id }}</td>
+        <!-- <td>{{ data._id }}</td> -->
         <td nzBreakWord>{{ data.title }}</td>
         <td>
           <ng-container *ngIf="data.completed">
@@ -157,10 +157,10 @@
             nz-button
             nzType="primary"
             nzDanger
-            (click)="onDelete(data.id)"
+            (click)="onDelete(data._id)"
           >
             Xóa</button
-          ><button nz-button nzType="primary" (click)="onEdit(data.id)">
+          ><button nz-button nzType="primary" (click)="onEdit(data._id)">
             Sửa
           </button>
         </td>

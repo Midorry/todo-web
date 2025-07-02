@@ -19,10 +19,10 @@
       nzMode="inline"
       [nzInlineCollapsed]="isCollapsed"
     >
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+      <li nz-submenu nzOpen nzTitle="Quản lý" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/welcome">Welcome</a>
+            <a routerLink="/welcome">Trang chủ</a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/list">Danh sách</a>
@@ -31,14 +31,20 @@
             <a routerLink="/calender">Lịch</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/stats">Thống kê</a>
+            <a routerLink="/stats">Thống kê cá nhân</a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+      <li nz-submenu nzOpen nzTitle="Quản lý" nzIcon="form">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
+          <li nz-menu-item nzMatchRouter *ngIf="userRole === 'admin'">
+            <a>Người dùng</a>
+          </li>
+          <li nz-menu-item nzMatchRouter *ngIf="userRole === 'admin'">
+            <a>Công việc</a>
+          </li>
+          <li nz-menu-item nzMatchRouter *ngIf="userRole === 'admin'">
+            <a routerLink="/stats">Thống kê toàn bộ</a>
           </li>
         </ul>
       </li>

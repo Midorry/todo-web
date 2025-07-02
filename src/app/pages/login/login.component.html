@@ -21,7 +21,9 @@
           [nzSm]="24"
           [nzXs]="24"
           [nzErrorTip]="
-            loginForm.get('email')?.hasError('required')
+            loginForm.get('email')?.hasError('required')&&
+            (loginForm.get('password')?.dirty ||
+              loginForm.get('password')?.touched)
               ? 'Vui lòng nhập email!' 
               :(loginForm.get('email')?.errors?.['invalidLogin'] && loginForm.get('email')?.touched)
               ? 'Mật khẩu hoặc email sai'

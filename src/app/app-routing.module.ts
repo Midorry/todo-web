@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ListComponent } from './pages/list/list.component';
+import { ListTodoComponent } from './pages/todos/list/list.component';
 import { CalenderViewComponent } from './pages/calendar-view/calender-view.component';
 import { StatsComponent } from './pages/stats/stats.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -19,7 +19,7 @@ const routes: Routes = [
   // Load Component, không có module riêng
   {
     path: 'list',
-    component: ListComponent,
+    component: ListTodoComponent,
     canActivate: [authGuard],
   },
   {

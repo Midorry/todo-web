@@ -20,10 +20,15 @@ import { UserService } from 'src/app/services/user.service';
 })
 export class RegisterComponent {
   registerForm: FormGroup<{
+    userName: FormControl<string>;
     email: FormControl<string>;
     password: FormControl<string>;
     confirmPassword: FormControl<string>;
   }> = this.fb.group({
+    userName: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(10)],
+    ],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     confirmPassword: [
@@ -36,25 +41,29 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       console.log('submit', this.registerForm.value);
       const userData: User = {
+        role: 'user',
+        userName: this.registerForm.value.userName || '',
         email: this.registerForm.value.email || '',
         password: this.registerForm.value.password || '',
       };
 
       this.userService.register(userData).subscribe({
         next: (res) => {
-          if (res === 'EXISTS') {
+          this.notification.show('Đăng ký thành công', 'success');
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          if (err.status === 400) {
             this.notification.show(
               'Email đã được đăng ký, vui lòng dùng email khác',
               'error'
             );
           } else {
-            this.notification.show('Đăng ký thành công', 'success');
-            this.router.navigate(['/login']);
+            this.notification.show(
+              'Đăng ký thất bại, vui lòng thử lại',
+              'error'
+            );
           }
-        },
-        error: (err) => {
-          console.log('Đăng ký thất bại: ', err);
-          this.notification.show('Đăng ký thất bại', 'error');
         },
       });
     } else {

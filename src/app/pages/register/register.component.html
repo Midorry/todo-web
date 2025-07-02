@@ -10,7 +10,44 @@
     >
       <nz-form-item style="width: 100%">
         <nz-form-label
-          [nzSm]="10"
+          [nzSm]="12"
+          [nzXs]="24"
+          nzRequired
+          nzFor="userName"
+          style="font-weight: 600"
+          >Tên người dùng</nz-form-label
+        >
+        <nz-form-control
+          [nzSm]="24"
+          [nzXs]="24"
+          [nzErrorTip]="
+            registerForm.get('userName')?.hasError('required') &&
+            (registerForm.get('userName')?.dirty ||
+              registerForm.get('userName')?.touched)
+              ? 'Vui lòng nhập tên người dùng'
+              : registerForm.get('userName')?.hasError('minlength') &&
+                (registerForm.get('userName')?.dirty ||
+                  registerForm.get('userName')?.touched)
+              ? 'Tên người dùng phải có ít nhất 3 ký tự'
+              : registerForm.get('userName')?.hasError('maxlength') &&
+                (registerForm.get('userName')?.dirty ||
+                  registerForm.get('userName')?.touched)
+              ? 'Tên người dùng chỉ có nhiều nhất 10 ký tự'
+              : undefined
+          "
+          style="width: 100%"
+        >
+          <input
+            nz-input
+            formControlName="userName"
+            id="userName"
+            style="width: 100%; border-radius: 8px; height: 40px"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item style="width: 100%">
+        <nz-form-label
+          [nzSm]="12"
           [nzXs]="24"
           nzRequired
           nzFor="email"
@@ -37,7 +74,7 @@
       </nz-form-item>
       <nz-form-item>
         <nz-form-label
-          [nzSm]="10"
+          [nzSm]="12"
           [nzXs]="24"
           nzFor="password"
           nzRequired
@@ -70,7 +107,7 @@
       </nz-form-item>
       <nz-form-item>
         <nz-form-label
-          [nzSm]="10"
+          [nzSm]="14"
           [nzXs]="24"
           nzFor="confirmPassword"
           nzRequired

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { User } from 'src/app/model/user.model';
 import { NotificationService } from 'src/app/services/notification.service';
+import { ToDoService } from 'src/app/services/todo.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -56,17 +57,15 @@ export class LoginComponent {
 
     this.userService.login(userData).subscribe({
       next: (res) => {
-        if (res.length > 0) {
-          this.notification.show('Đăng nhập thành công', 'success');
-          form.reset();
-          localStorage.setItem('userTodo', JSON.stringify(res));
-          this.router.navigate(['/welcome']);
-        } else {
-          // 👇 Chỉ set lỗi nếu login sai
-          form.get('email')?.setErrors({ invalidLogin: true });
-          form.get('password')?.setErrors({ invalidLogin: true });
-          this.notification.show('Sai email hoặc mật khẩu', 'error');
-        }
+        localStorage.setItem('userTodo', JSON.stringify(res.user));
+        console.log(res.user.role!);
+        localStorage.setItem('role', res.user.role!);
+        localStorage.setItem('token', res.token); // lưu token
+        localStorage.setItem('hasShownWelcomeNotification', 'false');
+        this.notification.show('Đăng nhập thành công', 'success');
+
+        this.todoService.loadTodos();
+        this.router.navigate(['/welcome']);
       },
       error: (err) => {
         console.error('Đăng nhập lỗi:', err);
@@ -79,7 +78,8 @@ export class LoginComponent {
     private fb: NonNullableFormBuilder,
     private userService: UserService,
     private router: Router,
-    private notification: NotificationService
+    private notification: NotificationService,
+    private todoService: ToDoService
   ) {}
   ngOnInit(): void {
     const emailControl = this.loginForm.get('email');

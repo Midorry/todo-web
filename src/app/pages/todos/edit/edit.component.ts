@@ -21,7 +21,7 @@ import { ToDoService } from 'src/app/services/todo.service';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
 })
-export class EditComponent implements OnInit {
+export class EditTodoComponent implements OnInit {
   @Input() visible = false;
   @Input() dataTodo!: Todo;
   @Output() cancel = new EventEmitter<void>();
@@ -97,7 +97,7 @@ export class EditComponent implements OnInit {
       completed: this.editForm.value.completed || false,
       tags: this.editForm.value.tags || [],
     };
-    this.todoService.updateTodo(this.dataTodo.id, updateTodo).subscribe({
+    this.todoService.updateTodo(this.dataTodo._id!, updateTodo).subscribe({
       next: () => {
         this.cancel.emit();
         this.visible = false;

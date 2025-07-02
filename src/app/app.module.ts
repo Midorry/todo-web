@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ListComponent } from './pages/list/list.component';
+import { ListTodoComponent } from './pages/todos/list/list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
@@ -27,9 +27,8 @@ import { IconDefinition } from '@ant-design/icons-angular';
 import * as AllIcons from '@ant-design/icons-angular/icons';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { AddComponent } from './pages/add/add.component';
+import { AddTodoComponent } from './pages/todos/add/add.component';
 import { ConfirmModalComponent } from './shared/confirm-modal/confirm-modal.component';
-import { EditComponent } from './pages/edit/edit.component';
 import { IconsProviderModule } from './icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
@@ -42,6 +41,7 @@ import { ButtonModeComponent } from './pages/button-mode/button-mode.component';
 import { StatsComponent } from './pages/stats/stats.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { EditTodoComponent } from './pages/todos/edit/edit.component';
 
 registerLocaleData(en);
 const icons: IconDefinition[] = Object.values(AllIcons);
@@ -49,10 +49,10 @@ const icons: IconDefinition[] = Object.values(AllIcons);
 @NgModule({
   declarations: [
     AppComponent,
-    ListComponent,
-    AddComponent,
+    ListTodoComponent,
+    AddTodoComponent,
     ConfirmModalComponent,
-    EditComponent,
+    EditTodoComponent,
     CalenderViewComponent,
     ButtonModeComponent,
     StatsComponent,

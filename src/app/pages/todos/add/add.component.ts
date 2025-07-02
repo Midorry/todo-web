@@ -14,7 +14,7 @@ import { ToDoService } from 'src/app/services/todo.service';
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.scss'],
 })
-export class AddComponent implements OnInit {
+export class AddTodoComponent implements OnInit {
   date = null;
   @Input() visible = false;
   @Output() cancel = new EventEmitter<void>();
