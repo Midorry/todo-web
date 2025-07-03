@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Todo } from 'src/app/model/todo.model';
 import { ToDoService } from 'src/app/services/todo.service';
 
@@ -11,10 +12,19 @@ export class StatsComponent {
   todos$ = this.toDoService.todos$;
   listOfDisplayData: Todo[] = [];
   barChartData: any;
-  constructor(private toDoService: ToDoService) {
-    this.toDoService.todos$.subscribe((todos) => {
-      this.listOfDisplayData = todos;
-      this.updateCharts();
+  constructor(private toDoService: ToDoService, private route: ActivatedRoute) {
+    this.route.data.subscribe((data) => {
+      if (data['mode'] === 'admin') {
+        this.toDoService.adminTodos$.subscribe((todos) => {
+          this.listOfDisplayData = todos;
+          this.updateCharts();
+        });
+      } else {
+        this.toDoService.todos$.subscribe((todos) => {
+          this.listOfDisplayData = todos;
+          this.updateCharts();
+        });
+      }
     });
   }
 

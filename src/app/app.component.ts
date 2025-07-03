@@ -11,7 +11,9 @@ export class AppComponent {
   isCollapsed = false;
   showLayout = true;
 
-  userRole = JSON.parse(localStorage.getItem('userTodo') || '{}').role;
+  get userRole() {
+    return JSON.parse(localStorage.getItem('userTodo') || '{}').role;
+  }
 
   constructor(private router: Router, private todoService: ToDoService) {
     this.router.events.subscribe((event) => {

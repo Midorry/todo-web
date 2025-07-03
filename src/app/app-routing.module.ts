@@ -6,6 +6,7 @@ import { StatsComponent } from './pages/stats/stats.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { authGuard } from './guards/auth.guard';
+import { ListUserComponent } from './pages/users/list/list.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'welcome' },
@@ -18,8 +19,20 @@ const routes: Routes = [
   },
   // Load Component, không có module riêng
   {
-    path: 'list',
+    path: 'list-todo',
     component: ListTodoComponent,
+    canActivate: [authGuard],
+    data: { mode: 'user' },
+  },
+  {
+    path: 'list-all-todo',
+    component: ListTodoComponent,
+    canActivate: [authGuard],
+    data: { mode: 'admin' },
+  },
+  {
+    path: 'list-user',
+    component: ListUserComponent,
     canActivate: [authGuard],
   },
   {
@@ -28,9 +41,16 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'stats',
+    path: 'stats-user',
     component: StatsComponent,
     canActivate: [authGuard],
+    data: { mode: 'user' },
+  },
+  {
+    path: 'stats-all',
+    component: StatsComponent,
+    canActivate: [authGuard],
+    data: { mode: 'admin' },
   },
   {
     path: 'login',

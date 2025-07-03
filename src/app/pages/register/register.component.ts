@@ -10,6 +10,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { UserService } from 'src/app/services/user.service';
 
@@ -47,7 +48,7 @@ export class RegisterComponent {
         password: this.registerForm.value.password || '',
       };
 
-      this.userService.register(userData).subscribe({
+      this.authService.register(userData).subscribe({
         next: (res) => {
           this.notification.show('Đăng ký thành công', 'success');
           this.router.navigate(['/login']);
@@ -91,7 +92,7 @@ export class RegisterComponent {
 
   constructor(
     private fb: NonNullableFormBuilder,
-    private userService: UserService,
+    private authService: AuthService,
     private notification: NotificationService,
     private router: Router
   ) {}

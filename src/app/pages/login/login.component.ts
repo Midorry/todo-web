@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { User } from 'src/app/model/user.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { ToDoService } from 'src/app/services/todo.service';
 import { UserService } from 'src/app/services/user.service';
@@ -55,12 +56,12 @@ export class LoginComponent {
     const password = form.get('password')?.value || '';
     const userData: User = { email, password };
 
-    this.userService.login(userData).subscribe({
+    this.authService.login(userData).subscribe({
       next: (res) => {
         localStorage.setItem('userTodo', JSON.stringify(res.user));
-        console.log(res.user.role!);
         localStorage.setItem('role', res.user.role!);
-        localStorage.setItem('token', res.token); // lưu token
+        localStorage.setItem('token', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
         localStorage.setItem('hasShownWelcomeNotification', 'false');
         this.notification.show('Đăng nhập thành công', 'success');
 
@@ -76,7 +77,7 @@ export class LoginComponent {
 
   constructor(
     private fb: NonNullableFormBuilder,
-    private userService: UserService,
+    private authService: AuthService,
     private router: Router,
     private notification: NotificationService,
     private todoService: ToDoService

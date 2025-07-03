@@ -1,0 +1,158 @@
+<ng-container *ngIf="users$ | async as users">
+  <button nz-button nzType="primary" (click)="onAdd()">Thêm</button>
+  <button
+    *ngIf="setOfCheckedId.size"
+    (click)="onDeleteMultiple()"
+    nz-button
+    nzType="primary"
+    nzDanger="true"
+  >
+    Xóa nhiều
+  </button>
+  <!-- Thanh tìm kiếm với dropdown chọn trường -->
+  <div class="search-bar">
+    <!-- Input tìm kiếm -->
+    <input
+      [(ngModel)]="searchValue"
+      placeholder="Tìm kiếm..."
+      class="search-input"
+      (keydown.enter)="search()"
+    />
+
+    <!-- Nút mở dropdown -->
+    <div class="dropdown">
+      <button (click)="toggleDropdown()" class="dropdown-button">
+        <span nz-icon nzType="filter" nzTheme="fill"></span>
+      </button>
+
+      <!-- Dropdown chứa checkbox -->
+      <div *ngIf="dropdownOpen" class="dropdown-content">
+        <label *ngFor="let field of availableFields" class="dropdown-item">
+          <input
+            type="checkbox"
+            [value]="field.value"
+            [checked]="fieldsToSearch.includes(field.value)"
+            (change)="onFieldChange($event, field.value)"
+          />
+          <span class="dropdown-label">{{ field.label }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Nút tìm kiếm -->
+    <button (click)="search()" class="search-button">Tìm kiếm</button>
+  </div>
+
+  <nz-table
+    #rowSelectionTable
+    nzShowSizeChanger
+    [nzData]="listOfDisplayData"
+    (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+    [nzPageSize]="50"
+    [nzScroll]="{ y: '340px', x: '1200px' }"
+  >
+    <thead>
+      <tr>
+        <th
+          [(nzChecked)]="checked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="onAllChecked($event)"
+          [nzWidth]="'30px'"
+        ></th>
+
+        <ng-container *ngFor="let column of listOfColumn">
+          <!-- Có filter và sort -->
+          <ng-container
+            *ngIf="column.listOfFilter && column.filterFn && column.compare"
+          >
+            <th
+              [nzFilters]="column.listOfFilter"
+              [nzFilterFn]="column.filterFn"
+              [nzSortFn]="column.compare"
+              [nzSortPriority]="column.priority ?? false"
+              [nzWidth]="column.width"
+            >
+              {{ column.title }}
+            </th>
+          </ng-container>
+
+          <!-- Chỉ filter -->
+          <ng-container
+            *ngIf="column.listOfFilter && column.filterFn && !column.compare"
+          >
+            <th
+              [nzFilters]="column.listOfFilter"
+              [nzFilterFn]="column.filterFn"
+              [nzWidth]="column.width"
+            >
+              {{ column.title }}
+            </th>
+          </ng-container>
+
+          <!-- Chỉ sort -->
+          <ng-container
+            *ngIf="!column.listOfFilter && !column.filterFn && column.compare"
+          >
+            <th
+              [nzSortFn]="column.compare"
+              [nzSortPriority]="column.priority ?? false"
+              [nzWidth]="column.width"
+            >
+              {{ column.title }}
+            </th>
+          </ng-container>
+
+          <!-- Không filter, không sort -->
+          <ng-container
+            *ngIf="!column.listOfFilter && !column.filterFn && !column.compare"
+          >
+            <th [nzWidth]="column.width">
+              {{ column.title }}
+            </th>
+          </ng-container>
+        </ng-container>
+        <th nzRight [nzWidth]="'60px'">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of rowSelectionTable.data">
+        <td
+          [nzChecked]="setOfCheckedId.has(data._id!)"
+          (nzCheckedChange)="onItemChecked(data._id!, $event)"
+        ></td>
+
+        <td nzBreakWord>{{ data.userName }}</td>
+
+        <td>{{ data.email }}</td>
+        <td>
+          {{ data.role }}
+        </td>
+        <td nzRight>
+          <button
+            nz-button
+            nzType="primary"
+            nzDanger
+            (click)="onDelete(data._id)"
+          >
+            Xóa</button
+          ><button nz-button nzType="primary" (click)="onEdit(data._id)">
+            Sửa
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <app-confirm-modal
+    [visible]="showConfirm"
+    [message]="confirmMessage"
+    (confirm)="onConfirm()"
+    (cancel)="onCancel()"
+  ></app-confirm-modal>
+  <app-edit-user
+    [visible]="showEdit"
+    [dataUser]="dataDetail"
+    (cancel)="onCancelEdit()"
+  >
+  </app-edit-user>
+  <app-add-user [visible]="showAdd" (cancel)="onCancelAdd()"></app-add-user>
+</ng-container>

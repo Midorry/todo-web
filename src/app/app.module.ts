@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ListTodoComponent } from './pages/todos/list/list.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -42,6 +42,10 @@ import { StatsComponent } from './pages/stats/stats.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { EditTodoComponent } from './pages/todos/edit/edit.component';
+import { ListUserComponent } from './pages/users/list/list.component';
+import { EditUserComponent } from './pages/users/edit/edit.component';
+import { AddUserComponent } from './pages/users/add/add.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 registerLocaleData(en);
 const icons: IconDefinition[] = Object.values(AllIcons);
@@ -53,6 +57,9 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     AddTodoComponent,
     ConfirmModalComponent,
     EditTodoComponent,
+    ListUserComponent,
+    EditUserComponent,
+    AddUserComponent,
     CalenderViewComponent,
     ButtonModeComponent,
     StatsComponent,
@@ -93,6 +100,11 @@ const icons: IconDefinition[] = Object.values(AllIcons);
   providers: [
     { provide: NZ_I18N, useValue: en_US },
     { provide: NZ_ICONS, useValue: icons },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

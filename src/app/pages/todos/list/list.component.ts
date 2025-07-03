@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { forkJoin, map } from 'rxjs';
 import { Todo } from 'src/app/model/todo.model';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -126,27 +127,9 @@ export class ListTodoComponent implements OnInit {
 
   constructor(
     private toDoService: ToDoService,
-    private notification: NotificationService
-  ) {
-    this.toDoService.todos$
-      .pipe(
-        map((todos) =>
-          todos.map((todo) => ({
-            ...todo,
-            priority:
-              todo.priority == 'low'
-                ? 'Thấp'
-                : todo.priority === 'medium'
-                ? 'Trung bình'
-                : 'Cao',
-          }))
-        )
-      )
-      .subscribe((todos) => {
-        this.listOfData = todos;
-        this.listOfDisplayData = todos;
-      });
-  }
+    private notification: NotificationService,
+    private route: ActivatedRoute
+  ) {}
 
   //Notification Deadline
   checkDeadlineStatus(deadline: string): 'overdue' | 'upcoming' | 'normal' {
@@ -187,30 +170,56 @@ export class ListTodoComponent implements OnInit {
     this.countOverdue = 0;
     this.countUpcoming = 0;
     this.countNormal = 0;
+    this.route.data.subscribe((data) => {
+      if (data['mode'] === 'admin') {
+        this.toDoService.adminTodos$
+          .pipe(
+            map((todos) =>
+              todos.map((todo) => ({
+                ...todo,
+                priority:
+                  todo.priority == 'low'
+                    ? 'Thấp'
+                    : todo.priority === 'medium'
+                    ? 'Trung bình'
+                    : 'Cao',
+              }))
+            )
+          )
+          .subscribe((todos) => {
+            this.listOfData = todos;
+            this.listOfDisplayData = todos;
+            todos.forEach((todo) => {
+              this.checkDeadlineStatusNotification(todo.deadline);
 
-    this.toDoService.todos$.subscribe((todos) => {
-      todos.forEach((todo) => {
-        this.checkDeadlineStatusNotification(todo.deadline);
+              this.checkDeadlineStatus(todo.deadline);
+            });
+          });
+      } else {
+        this.toDoService.todos$
+          .pipe(
+            map((todos) =>
+              todos.map((todo) => ({
+                ...todo,
+                priority:
+                  todo.priority == 'low'
+                    ? 'Thấp'
+                    : todo.priority === 'medium'
+                    ? 'Trung bình'
+                    : 'Cao',
+              }))
+            )
+          )
+          .subscribe((todos) => {
+            this.listOfData = todos;
+            this.listOfDisplayData = todos;
+            todos.forEach((todo) => {
+              this.checkDeadlineStatusNotification(todo.deadline);
 
-        this.checkDeadlineStatus(todo.deadline);
-      });
-
-      // if (this.countOverdue > 0) {
-      //   this.notification.show(
-      //     `Có ${this.countOverdue} công việc đã quá hạn`,
-      //     'error'
-      //   );
-      // } else if (this.countUpcoming > 0) {
-      //   this.notification.show(
-      //     `Có ${this.countUpcoming} công việc gần đến hạn`,
-      //     'warning'
-      //   );
-      // } else if (this.countNormal > 0) {
-      //   this.notification.show(
-      //     `Có ${this.countNormal} công việc cần làm`,
-      //     'info'
-      //   );
-      // }
+              this.checkDeadlineStatus(todo.deadline);
+            });
+          });
+      }
     });
   }
 
@@ -345,11 +354,9 @@ export class ListTodoComponent implements OnInit {
     this.openConfirm(
       'Bạn có chắc chắn muốn xóa những công việc này không?',
       () => {
-        const deleteRequests = Array.from(this.setOfCheckedId).map((id) =>
-          this.toDoService.deleteTodo(id)
-        );
+        const idsToDelete = Array.from(this.setOfCheckedId);
 
-        forkJoin(deleteRequests).subscribe({
+        this.toDoService.deleteMultipleTodos(idsToDelete).subscribe({
           next: () => {
             this.notification.show('Xóa thành công', 'success');
             this.setOfCheckedId.clear();

@@ -19,32 +19,38 @@
       nzMode="inline"
       [nzInlineCollapsed]="isCollapsed"
     >
-      <li nz-submenu nzOpen nzTitle="Quản lý" nzIcon="dashboard">
+      <li nz-submenu nzOpen nzTitle="Cá nhân" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/welcome">Trang chủ</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/list">Danh sách</a>
+            <a routerLink="/list-todo">Danh sách</a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/calender">Lịch</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/stats">Thống kê cá nhân</a>
+            <a routerLink="/stats-user">Thống kê cá nhân</a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Quản lý" nzIcon="form">
+      <li
+        nz-submenu
+        nzOpen
+        nzTitle="Quản lý"
+        nzIcon="form"
+        *ngIf="userRole === 'admin'"
+      >
         <ul>
           <li nz-menu-item nzMatchRouter *ngIf="userRole === 'admin'">
-            <a>Người dùng</a>
+            <a routerLink="/list-user">Người dùng</a>
           </li>
           <li nz-menu-item nzMatchRouter *ngIf="userRole === 'admin'">
-            <a>Công việc</a>
+            <a routerLink="/list-all-todo">Công việc</a>
           </li>
           <li nz-menu-item nzMatchRouter *ngIf="userRole === 'admin'">
-            <a routerLink="/stats">Thống kê toàn bộ</a>
+            <a routerLink="/stats-all">Thống kê toàn bộ</a>
           </li>
         </ul>
       </li>

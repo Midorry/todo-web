@@ -1,0 +1,138 @@
+<nz-modal
+  [(nzVisible)]="visible"
+  nzTitle="Thêm người dùng"
+  (nzOnCancel)="onCancel()"
+  [nzFooter]="null"
+>
+  <ng-container *nzModalContent>
+    <form
+      nz-form
+      [formGroup]="addUserForm"
+      (ngSubmit)="onSubmit()"
+      nzLayout="vertical"
+    >
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="userName"
+          >Tên người dùng</nz-form-label
+        >
+        <nz-form-control
+          [nzValidateStatus]="addUserForm.controls['userName']"
+          [nzErrorTip]="userNameErrorTemplate"
+          [nzSpan]="24"
+        >
+          <input
+            class="input-name"
+            formControlName="userName"
+            nz-input
+            placeholder="Tên người dùng"
+          />
+          <ng-template #userNameErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">
+              Tên người dùng là bắt buộc
+            </div>
+            <div *ngIf="control.hasError('minlength')">
+              Tên người dùng quá ngắn
+            </div>
+            <div *ngIf="control.hasError('maxlength')">
+              Tên người dùng quá dài
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="email">Email</nz-form-label>
+        <nz-form-control
+          [nzValidateStatus]="addUserForm.get('email')!"
+          [nzErrorTip]="emailErrorTemplate"
+          [nzSpan]="24"
+        >
+          <input
+            class="input-name"
+            formControlName="email"
+            nz-input
+            placeholder="Email"
+          />
+          <ng-template #emailErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')" else #emailError>
+              Email là bắt buộc
+            </div>
+            <div *ngIf="control.hasError('email')" #emailError>
+              Email sai định dạng
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="password">Mật khẩu</nz-form-label>
+        <nz-form-control
+          [nzValidateStatus]="addUserForm.get('password')!"
+          [nzErrorTip]="passwordErrorTemplate"
+          [nzSpan]="24"
+        >
+          <input
+            class="input-name"
+            formControlName="password"
+            nz-input
+            type="password"
+            placeholder="Mật khẩu"
+          />
+          <ng-template #passwordErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">Mật khẩu là bắt buộc</div>
+            <div *ngIf="control.hasError('minlength')">Mật khẩu quá ngắn</div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="confirmPassword"
+          >Nhập lại mật khẩu</nz-form-label
+        >
+        <nz-form-control
+          [nzValidateStatus]="addUserForm.get('confirmPassword')!"
+          [nzErrorTip]="confirmPasswordErrorTemplate"
+          [nzSpan]="24"
+        >
+          <input
+            class="input-name"
+            formControlName="confirmPassword"
+            nz-input
+            type="password"
+            placeholder="Nhập lại mật khẩu"
+          />
+          <ng-template #confirmPasswordErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">
+              Vui lòng nhập lại mật khẩu
+            </div>
+            <div *ngIf="control.hasError('confirmMismatch')">
+              Mật khẩu nhập lại không khớp
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzFor="role">Vai trò</nz-form-label>
+        <nz-form-control
+          [nzSpan]="24"
+          [nzValidateStatus]="addUserForm.get('role')!"
+          [nzErrorTip]="roleErrorTemplate"
+        >
+          <nz-radio-group formControlName="role">
+            <label nz-radio [nzValue]="'admin'">Admin</label>
+            <label nz-radio [nzValue]="'user'">User</label>
+          </nz-radio-group>
+          <ng-template #roleErrorTemplate let-control>
+            <div *ngIf="control.hasError('required')">
+              Vui lòng chọn vai trò
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control class="button-add">
+          <button nz-button nzType="primary" htmlType="submit">Thêm</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

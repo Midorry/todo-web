@@ -8,39 +8,63 @@ export class ToDoService {
   private apiUrl = 'http://localhost:3000/api/todos';
 
   private todosSubject = new BehaviorSubject<Todo[]>([]);
+  private adminTodosSubject = new BehaviorSubject<Todo[]>([]);
+
+  adminTodos$ = this.adminTodosSubject.asObservable();
   todos$ = this.todosSubject.asObservable();
+  userTodo: any;
+  userTodoString = localStorage.getItem('userTodo');
+  userRole = localStorage.getItem('role');
 
   constructor(private http: HttpClient) {
     this.loadTodos();
+    if (this.userRole === 'admin') {
+      this.loadAdminTodos();
+    }
   }
-
-  token = localStorage.getItem('token');
 
   // Lấy todos của user đang login
   loadTodos() {
-    let userTodo;
-    const userTodoString = localStorage.getItem('userTodo');
-    if (userTodoString !== null) {
-      userTodo = JSON.parse(userTodoString);
+    if (this.userTodoString !== null) {
+      this.userTodo = JSON.parse(this.userTodoString);
     } else {
       console.error('Chưa đăng nhập, không có userId');
       this.todosSubject.next([]); // clear list
       return;
     }
-    if (!userTodo._id) {
+    if (!this.userTodo._id) {
       console.error('Chưa đăng nhập, không có userId');
       this.todosSubject.next([]); // clear list
       return;
     }
 
     this.http
-      .get<Todo[]>(`${this.apiUrl}/user/${userTodo._id}`, {
+      .get<Todo[]>(`${this.apiUrl}/user/${this.userTodo._id}`, {
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       .subscribe((todos) => {
         this.todosSubject.next(todos);
+      });
+  }
+
+  loadAdminTodos() {
+    if (!this.userTodo?._id) {
+      this.userTodo = JSON.parse(localStorage.getItem('userTodo') || '{}');
+    }
+    if (!this.userTodo?._id) {
+      console.error('Chưa đăng nhập, không có userId');
+      this.adminTodosSubject.next([]);
+      return;
+    }
+
+    this.http
+      .get<Todo[]>(`${this.apiUrl}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      })
+      .subscribe((todos) => {
+        this.adminTodosSubject.next(todos);
       });
   }
 
@@ -52,7 +76,7 @@ export class ToDoService {
     return this.http
       .post<Todo>(this.apiUrl, newTodo, {
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       .pipe(tap(() => this.loadTodos()));
@@ -62,16 +86,41 @@ export class ToDoService {
     return this.http
       .delete<Todo>(`${this.apiUrl}/${id}`, {
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       .pipe(tap(() => this.loadTodos()));
   }
 
+  deleteMultipleTodos(ids: string[]): Observable<any> {
+    return this.http
+      .delete(`${this.apiUrl}/todos`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+        body: { ids }, // gửi body
+      })
+      .pipe(tap(() => this.loadTodos()));
+  }
+
+  getAllTodo(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(`${this.apiUrl}/user/${this.userTodo._id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+  }
+
+  getUserTodo(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(`${this.apiUrl}/user/${this.userTodo._id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+  }
+
   getTodoDetail(id: string): Observable<Todo> {
     return this.http.get<Todo>(`${this.apiUrl}/${id}`, {
       headers: {
-        Authorization: `Bearer ${this.token}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
   }
@@ -80,7 +129,7 @@ export class ToDoService {
     return this.http
       .put<Todo>(`${this.apiUrl}/${id}`, updateData, {
         headers: {
-          Authorization: `Bearer ${this.token}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       })
       .pipe(tap(() => this.loadTodos()));
