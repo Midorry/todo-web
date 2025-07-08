@@ -27,6 +27,8 @@
     "@fullcalendar/daygrid": "^6.1.17",
     "@fullcalendar/interaction": "^6.1.17",
     "@fullcalendar/timegrid": "^6.1.17",
+    "@ngx-translate/core": "^16.0.4",
+    "@ngx-translate/http-loader": "^16.0.1",
     "angular-calendar": "^0.31.1",
     "chart.js": "^3.9.1",
     "date-fns": "^2.29.3",

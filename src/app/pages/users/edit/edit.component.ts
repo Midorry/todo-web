@@ -52,11 +52,11 @@ export class EditUserComponent {
       ]),
       role: this.fb.control<string | null>('', [Validators.required]),
       password: this.fb.control<string | null>('', [
-        Validators.required,
+        // Validators.required,
         Validators.minLength(6),
       ]),
       confirmPassword: this.fb.control<string | null>('', [
-        Validators.required,
+        // Validators.required,
         this.matchOtherValidator('password'),
       ]),
     }) as FormGroup<{
@@ -98,16 +98,16 @@ export class EditUserComponent {
       password: this.editUserForm.value.password || '',
     };
 
-    this.userService.createUser(newUser).subscribe({
+    this.userService.updateUser(newUser, this.dataUser._id!).subscribe({
       next: () => {
         this.cancel.emit();
         this.visible = false;
-        this.notification.show('Thêm mới thành công', 'success');
+        this.notification.show('Cập nhật thành công', 'success');
         this.editUserForm.reset();
       },
       error: (err) => {
-        console.log('Thêm mới thất bại: ', err);
-        this.notification.show('Thêm mới thất bại', 'error');
+        console.log('Cập nhật thất bại: ', err);
+        this.notification.show('Cập nhật thất bại', 'error');
       },
     });
   }

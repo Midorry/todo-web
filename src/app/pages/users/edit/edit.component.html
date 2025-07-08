@@ -77,7 +77,7 @@
             placeholder="Mật khẩu"
           />
           <ng-template #passwordErrorTemplate let-control>
-            <div *ngIf="control.hasError('required')">Mật khẩu là bắt buộc</div>
+            <!-- <div *ngIf="control.hasError('required')">Mật khẩu là bắt buộc</div> -->
             <div *ngIf="control.hasError('minlength')">Mật khẩu quá ngắn</div>
           </ng-template>
         </nz-form-control>
@@ -99,9 +99,9 @@
             placeholder="Nhập lại mật khẩu"
           />
           <ng-template #confirmPasswordErrorTemplate let-control>
-            <div *ngIf="control.hasError('required')">
+            <!-- <div *ngIf="control.hasError('required')">
               Vui lòng nhập lại mật khẩu
-            </div>
+            </div> -->
             <div *ngIf="control.hasError('confirmMismatch')">
               Mật khẩu nhập lại không khớp
             </div>
@@ -130,7 +130,7 @@
 
       <nz-form-item>
         <nz-form-control class="button-edit">
-          <button nz-button nzType="primary" htmlType="submit">Thêm</button>
+          <button nz-button nzType="primary" htmlType="submit">Sửa</button>
         </nz-form-control>
       </nz-form-item>
     </form>

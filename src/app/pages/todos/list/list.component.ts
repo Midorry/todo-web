@@ -124,6 +124,7 @@ export class ListTodoComponent implements OnInit {
   countOverdue = 0;
   countUpcoming = 0;
   countNormal = 0;
+  mode: 'admin' | 'user' = 'user';
 
   constructor(
     private toDoService: ToDoService,
@@ -161,66 +162,48 @@ export class ListTodoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.checkTodosDeadline(); // check lần đầu
+    // this.checkTodosDeadline(); // check lần đầu
 
-    setInterval(() => this.checkTodosDeadline(), 3600 * 1000); // mỗi giờ
+    // setInterval(() => this.loadTodos(), 3600 * 1000); // mỗi giờ
+    this.route.data.subscribe((data) => {
+      this.mode = data['mode'] === 'admin' ? 'admin' : 'user';
+
+      this.loadTodos();
+      setInterval(() => this.loadTodos(), 3600 * 1000);
+    });
   }
 
-  checkTodosDeadline() {
+  loadTodos() {
     this.countOverdue = 0;
     this.countUpcoming = 0;
     this.countNormal = 0;
-    this.route.data.subscribe((data) => {
-      if (data['mode'] === 'admin') {
-        this.toDoService.adminTodos$
-          .pipe(
-            map((todos) =>
-              todos.map((todo) => ({
-                ...todo,
-                priority:
-                  todo.priority == 'low'
-                    ? 'Thấp'
-                    : todo.priority === 'medium'
-                    ? 'Trung bình'
-                    : 'Cao',
-              }))
-            )
-          )
-          .subscribe((todos) => {
-            this.listOfData = todos;
-            this.listOfDisplayData = todos;
-            todos.forEach((todo) => {
-              this.checkDeadlineStatusNotification(todo.deadline);
 
-              this.checkDeadlineStatus(todo.deadline);
-            });
-          });
-      } else {
-        this.toDoService.todos$
-          .pipe(
-            map((todos) =>
-              todos.map((todo) => ({
-                ...todo,
-                priority:
-                  todo.priority == 'low'
-                    ? 'Thấp'
-                    : todo.priority === 'medium'
-                    ? 'Trung bình'
-                    : 'Cao',
-              }))
-            )
-          )
-          .subscribe((todos) => {
-            this.listOfData = todos;
-            this.listOfDisplayData = todos;
-            todos.forEach((todo) => {
-              this.checkDeadlineStatusNotification(todo.deadline);
+    const todos$ =
+      this.mode === 'admin'
+        ? this.toDoService.adminTodos$
+        : this.toDoService.todos$;
 
-              this.checkDeadlineStatus(todo.deadline);
-            });
-          });
-      }
-    });
+    todos$
+      .pipe(
+        map((todos) =>
+          todos.map((todo) => ({
+            ...todo,
+            priority:
+              todo.priority == 'low'
+                ? 'Thấp'
+                : todo.priority === 'medium'
+                ? 'Trung bình'
+                : 'Cao',
+          }))
+        )
+      )
+      .subscribe((todos) => {
+        this.listOfData = todos;
+        this.listOfDisplayData = todos;
+        todos.forEach((todo) =>
+          this.checkDeadlineStatusNotification(todo.deadline)
+        );
+      });
   }
 
   // Search

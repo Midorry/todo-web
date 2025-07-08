@@ -4,7 +4,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ListTodoComponent } from './pages/todos/list/list.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
@@ -46,9 +50,16 @@ import { ListUserComponent } from './pages/users/list/list.component';
 import { EditUserComponent } from './pages/users/edit/edit.component';
 import { AddUserComponent } from './pages/users/add/add.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { SwitchLanguageComponent } from './pages/switch-language/switch-language.component';
 
 registerLocaleData(en);
 const icons: IconDefinition[] = Object.values(AllIcons);
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   declarations: [
@@ -65,10 +76,18 @@ const icons: IconDefinition[] = Object.values(AllIcons);
     StatsComponent,
     LoginComponent,
     RegisterComponent,
-  ],
+  SwitchLanguageComponent,],
   imports: [
     BrowserModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'vi',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
     NgChartsModule,
     FullCalendarModule,
     NzTableModule,

@@ -7,7 +7,7 @@ import { take, filter } from 'rxjs';
 @Component({
   selector: 'app-welcome',
   templateUrl: './welcome.component.html',
-  styleUrls: ['./welcome.component.css'],
+  styleUrls: ['./welcome.component.scss'],
 })
 export class WelcomeComponent implements OnInit {
   userEmail: string | null = null;

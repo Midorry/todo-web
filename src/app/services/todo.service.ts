@@ -12,12 +12,33 @@ export class ToDoService {
 
   adminTodos$ = this.adminTodosSubject.asObservable();
   todos$ = this.todosSubject.asObservable();
-  userTodo: any;
-  userTodoString = localStorage.getItem('userTodo');
-  userRole = localStorage.getItem('role');
+  // userTodo: any;
+  // userTodoString = localStorage.getItem('userTodo');
+  // userRole = localStorage.getItem('role');
 
   constructor(private http: HttpClient) {
-    this.loadTodos();
+    this.loadDataByRole();
+    // console.log(this.userRole);
+    // if (localStorage.getItem('role') === 'admin') {
+    //   console.log(this.userRole);
+    //   this.loadAdminTodos();
+    // }
+  }
+
+  get userRole(): string | null {
+    return localStorage.getItem('role');
+  }
+
+  /**
+   * Lấy user đang đăng nhập từ localStorage
+   */
+  get userTodo(): any {
+    const str = localStorage.getItem('userTodo');
+    return str ? JSON.parse(str) : null;
+  }
+
+  loadDataByRole() {
+    if (this.userTodo) this.loadTodos();
     if (this.userRole === 'admin') {
       this.loadAdminTodos();
     }
@@ -25,13 +46,13 @@ export class ToDoService {
 
   // Lấy todos của user đang login
   loadTodos() {
-    if (this.userTodoString !== null) {
-      this.userTodo = JSON.parse(this.userTodoString);
-    } else {
-      console.error('Chưa đăng nhập, không có userId');
-      this.todosSubject.next([]); // clear list
-      return;
-    }
+    // if (this.userTodo !== null) {
+    //   this.userTodo = JSON.parse(userTodoString);
+    // } else {
+    //   console.error('Chưa đăng nhập, không có userId');
+    //   this.todosSubject.next([]); // clear list
+    //   return;
+    // }
     if (!this.userTodo._id) {
       console.error('Chưa đăng nhập, không có userId');
       this.todosSubject.next([]); // clear list
@@ -50,9 +71,9 @@ export class ToDoService {
   }
 
   loadAdminTodos() {
-    if (!this.userTodo?._id) {
-      this.userTodo = JSON.parse(localStorage.getItem('userTodo') || '{}');
-    }
+    // if (!this.userTodo?._id) {
+    //   this.userTodo = JSON.parse(localStorage.getItem('userTodo') || '{}');
+    // }
     if (!this.userTodo?._id) {
       console.error('Chưa đăng nhập, không có userId');
       this.adminTodosSubject.next([]);

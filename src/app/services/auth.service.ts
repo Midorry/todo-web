@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, map } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { User } from '../model/user.model';
+import { Router } from '@angular/router';
+import { ToDoService } from './todo.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -10,7 +12,7 @@ export class AuthService {
   private usersSubject = new BehaviorSubject<User[]>([]);
   users$ = this.usersSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   getAccessToken() {
     return localStorage.getItem('token'); // access token
@@ -56,13 +58,23 @@ export class AuthService {
         map((response) => {
           localStorage.setItem('token', response.accessToken);
           return response.accessToken;
+        }),
+        catchError((err) => {
+          console.error('Lỗi refreshAccessToken:', err);
+          return throwError(() => err);
         })
       );
   }
 
   logout() {
+    localStorage.removeItem('hasShownWelcomeNotification');
+    localStorage.removeItem('role');
+    localStorage.removeItem('userTodo');
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
+    this.router.navigate(['/login']);
+    const refreshToken = this.getRefreshToken();
     // Có thể gọi BE để xóa refresh token
+    return this.http.post<any>(`${this.apiUrl}/auth/logout`, { refreshToken });
   }
 }

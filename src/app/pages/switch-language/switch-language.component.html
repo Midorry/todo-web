@@ -1,0 +1,6 @@
+<nz-switch
+  [(ngModel)]="isEnglish"
+  [nzCheckedChildren]="'EN'"
+  [nzUnCheckedChildren]="'VI'"
+  (ngModelChange)="switchLang($event)"
+></nz-switch>

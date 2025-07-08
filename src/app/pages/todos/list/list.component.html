@@ -1,5 +1,6 @@
 <ng-container *ngIf="todos$ | async as todos">
   <button nz-button nzType="primary" (click)="onAdd()">Thêm</button>
+  {{ "HELLO" | translate }}
   <button
     *ngIf="setOfCheckedId.size"
     (click)="onDeleteMultiple()"

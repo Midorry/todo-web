@@ -1,31 +1,37 @@
-<h2>Xin chào, {{ userEmail || "Người dùng" }}</h2>
-<p>Chúc bạn một ngày làm việc hiệu quả! ✨</p>
+<div class="wrapper">
+  <h2 class="greeting">
+    {{ "HELLO" | translate }}, {{ userEmail || "Người dùng" }}
+  </h2>
+  <p>{{ "WELCOME" | translate }} ✨</p>
 
-<div class="stats">
-  <div class="stat-card">
-    Tổng công việc: <strong>{{ totalTodos }}</strong>
+  <div class="stats">
+    <div class="stat-card">
+      Tổng công việc: <strong>{{ totalTodos }}</strong>
+    </div>
+    <div class="stat-card">
+      Đã hoàn thành: <strong>{{ completedTodos }}</strong>
+    </div>
+    <div class="stat-card">
+      Quá hạn: <strong>{{ overdueTodos }}</strong>
+    </div>
+    <div class="stat-card">
+      Sắp đến hạn: <strong>{{ upcomingTodos }}</strong>
+    </div>
   </div>
-  <div class="stat-card">
-    Đã hoàn thành: <strong>{{ completedTodos }}</strong>
-  </div>
-  <div class="stat-card">
-    Quá hạn: <strong>{{ overdueTodos }}</strong>
-  </div>
-  <div class="stat-card">
-    Sắp đến hạn: <strong>{{ upcomingTodos }}</strong>
-  </div>
+
+  <h3 class="important">Công việc ưu tiên</h3>
+  <ul *ngIf="topImportantTodos.length > 0; else noImportant">
+    <li *ngFor="let todo of topImportantTodos">
+      {{ todo.title }} – Hạn: {{ todo.deadline | date : "short" }}
+    </li>
+  </ul>
+  <ng-template #noImportant>
+    <p>Hiện chưa có công việc ưu tiên cao.</p>
+  </ng-template>
+
+  <!-- <button nz-button nzType="primary" (click)="onAdd()">
+    Thêm mới công việc
+  </button> -->
+
+  <!-- <app-add [visible]="showAdd" (cancel)="onCancelAdd()"></app-add> -->
 </div>
-
-<h3>Công việc ưu tiên</h3>
-<ul *ngIf="topImportantTodos.length > 0; else noImportant">
-  <li *ngFor="let todo of topImportantTodos">
-    {{ todo.title }} – Hạn: {{ todo.deadline | date : "short" }}
-  </li>
-</ul>
-<ng-template #noImportant>
-  <p>Hiện chưa có công việc ưu tiên cao.</p>
-</ng-template>
-
-<button nz-button nzType="primary" (click)="onAdd()">Thêm mới công việc</button>
-
-<!-- <app-add [visible]="showAdd" (cancel)="onCancelAdd()"></app-add> -->

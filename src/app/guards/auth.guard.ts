@@ -19,7 +19,7 @@ export const authGuard: CanActivateFn = async () => {
       const decoded = jwtDecode<JwtPayload>(token);
       const currentTime = Date.now() / 1000;
 
-      if (decoded.exp && decoded.exp > currentTime) {
+      if (decoded.exp && decoded.exp > currentTime + 10) {
         return true;
       } else {
         // Token hết hạn → thử refresh
@@ -34,11 +34,13 @@ export const authGuard: CanActivateFn = async () => {
             return false;
           }
         } catch (e) {
+          console.log('Lỗi refresh token', e);
           doLogout(router);
           return false;
         }
       }
     } catch (e) {
+      console.log('Lỗi refresh token', e);
       doLogout(router);
       return false;
     }

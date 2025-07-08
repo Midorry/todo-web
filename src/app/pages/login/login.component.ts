@@ -65,7 +65,7 @@ export class LoginComponent {
         localStorage.setItem('hasShownWelcomeNotification', 'false');
         this.notification.show('Đăng nhập thành công', 'success');
 
-        this.todoService.loadTodos();
+        this.todoService.loadDataByRole();
         this.router.navigate(['/welcome']);
       },
       error: (err) => {

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ToDoService } from './services/todo.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,11 @@ export class AppComponent {
     return JSON.parse(localStorage.getItem('userTodo') || '{}').role;
   }
 
-  constructor(private router: Router, private todoService: ToDoService) {
+  constructor(
+    private router: Router,
+    private todoService: ToDoService,
+    private authService: AuthService
+  ) {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         // Hide layout if current URL is /login
@@ -27,10 +32,6 @@ export class AppComponent {
   }
   logout() {
     this.todoService.resetTodos();
-    localStorage.removeItem('hasShownWelcomeNotification');
-    localStorage.removeItem('role');
-    localStorage.removeItem('userTodo');
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 }
